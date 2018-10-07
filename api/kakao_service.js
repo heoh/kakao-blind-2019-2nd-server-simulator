@@ -44,8 +44,10 @@ class KakaoService {
             return response(405, null);
         }
     
-        const oldState = this._state_repository.getByUserKey(user_key);
-        this._state_repository.remove(oldState);
+        if (this._state_repository.hasUserKey(user_key)) {
+            const oldState = this._state_repository.getByUserKey(user_key);
+            this._state_repository.remove(oldState);
+        }
     
         const token = this._createUniqueToken();
         const state = new State(user_key, token, problem_id, num_of_elevators);
