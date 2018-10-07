@@ -7,6 +7,10 @@ class ProblemRepository {
     hasProblemId(problem_id) {
         return this._problems.hasOwnProperty(problem_id);
     }
+
+    get(problem_id) {
+        return this._problems[problem_id];
+    }
 }
 
 module.exports = ProblemRepository;
