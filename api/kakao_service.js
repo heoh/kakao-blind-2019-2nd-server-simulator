@@ -1,4 +1,5 @@
 const Time = require(__dirname + '/../util/time.js');
+const TokenGenerator = require(__dirname + '/../util/token_generator.js');
 const UserRepository = require(__dirname + '/../repository/user_repository.js');
 const StateRepository = require(__dirname + '/../repository/state_repository.js');
 const ProblemRepository = require(__dirname + '/../repository/problem_repository.js');
@@ -68,7 +69,12 @@ const response = function (status, body) {
 }
 
 const createUniqueToken = function () {
-    return null;
+    const token_generator = new TokenGenerator();
+    let token = token_generator.generate();
+    while (state_repository.hasToken(token)) {
+        token = token_generator.generate();
+    }
+    return token;
 }
 
 module.exports = KakaoService;

@@ -9,6 +9,10 @@ StateRepository.prototype.getByUserKey = function (user_key) {
     return null;
 }
 
+StateRepository.prototype.hasToken = function (token) {
+    return false;
+}
+
 StateRepository.prototype.add = function (state) {
     return false;
 }
