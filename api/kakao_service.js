@@ -11,56 +11,7 @@ const TOKEN_EXPIRATION_TIME = 10 * Time.MIN_TO_MILLISEC;
 const MIN_NUM_OF_ELEVATORS = 1;
 const MAX_NUM_OF_ELEVATORS = 4;
 
-const user_repository = new UserRepository();
-const state_repository = new StateRepository();
-const problem_repository = new ProblemRepository();
-
-function KakaoService() {
-}
-
-KakaoService.prototype.start = function (user_key, problem_id, num_of_elevators) {
-    if (!user_repository.isValid(user_key)) {
-        return response(403, null);
-    }
-    if (state_repository.hasUserKey(user_key)) {
-        const state = state_repository.getByUserKey(user_key);
-        if (state.getElapsedTime() < MIN_TOKEN_GENERATION_INTERVAL) {
-            return response(405, null);
-        }
-    }
-    if (!problem_repository.hasProblemId(problem_id)) {
-        return response(405, null);
-    }
-    if ((num_of_elevators < MIN_NUM_OF_ELEVATORS) ||
-            (num_of_elevators > MAX_NUM_OF_ELEVATORS)) {
-        return response(405, null);
-    }
-
-    const oldState = state_repository.getByUserKey(user_key);
-    state_repository.remove(oldState);
-
-    const token = createUniqueToken();
-    const state = new State(user_key, token, problem_id, num_of_elevators);
-    state_repository.add(state);
-
-    const body = {
-        'token': state.token,
-        'timestamp': state.timestamp,
-        'elevators': state.elevators,
-        'is_end': state.isEnd()
-    };
-    return response(200, body);
-}
-
-KakaoService.prototype.onCalls = function (token) {
-    return response(200, null);
-}
-
-KakaoService.prototype.action = function (token, action) {
-    return response(200, null);
-}
-
-const response = function (status, body) {
+function response(status, body) {
     const res = {
         'status': status,
         'body': body
@@ -68,13 +19,63 @@ const response = function (status, body) {
     return res;
 }
 
-const createUniqueToken = function () {
-    const token_generator = new TokenGenerator();
-    let token = token_generator.generate();
-    while (state_repository.hasToken(token)) {
-        token = token_generator.generate();
+class KakaoService {
+    constructor() {
+        this._user_repository = new UserRepository();
+        this._state_repository = new StateRepository();
+        this._problem_repository = new ProblemRepository();
     }
-    return token;
+
+    start(user_key, problem_id, num_of_elevators) {
+        if (!this._user_repository.isValid(user_key)) {
+            return response(403, null);
+        }
+        if (this._state_repository.hasUserKey(user_key)) {
+            const state = this._state_repository.getByUserKey(user_key);
+            if (state.getElapsedTime() < MIN_TOKEN_GENERATION_INTERVAL) {
+                return response(405, null);
+            }
+        }
+        if (!this._problem_repository.hasProblemId(problem_id)) {
+            return response(405, null);
+        }
+        if ((num_of_elevators < MIN_NUM_OF_ELEVATORS) ||
+                (num_of_elevators > MAX_NUM_OF_ELEVATORS)) {
+            return response(405, null);
+        }
+    
+        const oldState = this._state_repository.getByUserKey(user_key);
+        this._state_repository.remove(oldState);
+    
+        const token = this._createUniqueToken();
+        const state = new State(user_key, token, problem_id, num_of_elevators);
+        this._state_repository.add(state);
+    
+        const body = {
+            'token': state.token,
+            'timestamp': state.timestamp,
+            'elevators': state.elevators,
+            'is_end': state.isEnd()
+        };
+        return response(200, body);
+    }
+
+    onCalls(token) {
+        return response(200, null);
+    }
+
+    action(token, action) {
+        return response(200, null);
+    }
+    
+    _createUniqueToken() {
+        const token_generator = new TokenGenerator();
+        let token = token_generator.generate();
+        while (this._state_repository.hasToken(token)) {
+            token = token_generator.generate();
+        }
+        return token;
+    }
 }
 
 module.exports = KakaoService;

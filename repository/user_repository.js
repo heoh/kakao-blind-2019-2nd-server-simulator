@@ -1,8 +1,7 @@
-function UserRepository() {
-}
-
-UserRepository.prototype.isValid = function (user_key) {
-    return true;
+class UserRepository {
+    isValid(user_key) {
+        return true;
+    }
 }
 
 module.exports = UserRepository;

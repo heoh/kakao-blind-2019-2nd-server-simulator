@@ -1,22 +1,26 @@
-function State(user_key, token, problem_id, num_of_elevators) {
-    this.user_key = user_key;
-    this.token = token;
-    this.created_time = Time.getCurrentMillisec();
-    this.problem_id = problem_id;
-    this.timestamp = 0;
-    this.elevators = createElevators(num_of_elevators);
-}
+const Time = require(__dirname + '/../util/time.js');
 
-const createElevators = function (num_of_elevators) {
-    return null;
-}
+class State {
+    constructor(user_key, token, problem_id, num_of_elevators) {
+        this.user_key = user_key;
+        this.token = token;
+        this.created_time = Time.getCurrentMillisec();
+        this.problem_id = problem_id;
+        this.timestamp = 0;
+        this.elevators = this._createElevators(num_of_elevators);
+    }
 
-State.prototype.getElapsedTime = function () {
-    return 0;
-}
+    getElapsedTime() {
+        return 0;
+    }
+    
+    isEnd() {
+        return false;
+    }
 
-State.prototype.isEnd = function () {
-    return false;
+    _createElevators(num_of_elevators) {
+        return null;
+    }
 }
 
 module.exports = State;

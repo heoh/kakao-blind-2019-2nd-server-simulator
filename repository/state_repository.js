@@ -1,24 +1,23 @@
-function StateRepository() {
-}
-
-StateRepository.prototype.hasUserKey = function (user_key) {
-    return false;
-}
-
-StateRepository.prototype.getByUserKey = function (user_key) {
-    return null;
-}
-
-StateRepository.prototype.hasToken = function (token) {
-    return false;
-}
-
-StateRepository.prototype.add = function (state) {
-    return false;
-}
-
-StateRepository.prototype.remove = function (state) {
-    return false;
+class StateRepository {
+    hasUserKey(user_key) {
+        return false;
+    }
+    
+    getByUserKey(user_key) {
+        return null;
+    }
+    
+    hasToken(token) {
+        return false;
+    }
+    
+    add(state) {
+        return false;
+    }
+    
+    remove(state) {
+        return false;
+    }
 }
 
 module.exports = StateRepository;
