@@ -20,4 +20,4 @@ function KakaoService() {
     }
 }
 
-module.exports = new KakaoService();
+module.exports = KakaoService;

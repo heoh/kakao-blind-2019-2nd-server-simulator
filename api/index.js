@@ -5,7 +5,9 @@ const router = express.Router();
 router.use(body_parser.json());
 router.use(body_parser.urlencoded({ extended: true }));
 
-const kakao_service = require(__dirname + '/kakao_service.js');
+const KakaoService = require(__dirname + '/kakao_service.js');
+
+const kakao_service = new KakaoService();
 
 router.post('/start/:user_key/:problem_id/:num_of_elevators', (req, res) => {
     const user_key = req.params['user_key'];
