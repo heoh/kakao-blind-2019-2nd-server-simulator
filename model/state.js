@@ -26,9 +26,11 @@ class State {
     }
 
     _createElevators(num_of_elevators) {
+        const problem = problem_repository.get(this.problem_id);
+
         const elevators = [];
         for (let i = 0; i < num_of_elevators; i++) {
-            elevators.push(new Elevator());
+            elevators.push(new Elevator(i, problem.max_passengers, problem.max_floor));
         }
         return elevators;
     }
