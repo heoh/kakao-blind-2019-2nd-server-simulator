@@ -21,12 +21,16 @@ class State {
     }
     
     isEnd() {
-        const problem = problem_repository.get(this.problem_id);
+        const problem = this._getProblem();
         return (this.ended_calls == problem.calls.length);
     }
 
+    _getProblem() {
+        return problem_repository.get(this.problem_id);
+    }
+
     _createElevators(num_of_elevators) {
-        const problem = problem_repository.get(this.problem_id);
+        const problem = this._getProblem();
 
         const elevators = [];
         for (let i = 0; i < num_of_elevators; i++) {
