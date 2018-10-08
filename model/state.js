@@ -111,12 +111,15 @@ class State {
 
         for (let i = 0; i < commands.length; i++) {
             const command = commands[i];
+            const command_type = command.command;
             const elevator = this.elevators[command.elevator_id];
 
             if (!elevator.isExecutable(calls, command)) {
                 return false;
             }
-            elevator.updateCalls(calls, command);
+            if ((command_type == "ENTER") || (command_type == "EXIT")) {
+                elevator.updateCalls(calls, command);
+            }
         }
 
         return true;
@@ -133,7 +136,7 @@ class State {
     }
 
     _updateCalls() {
-        
+
     }
 }
 
