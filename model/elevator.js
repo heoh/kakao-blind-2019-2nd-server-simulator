@@ -123,7 +123,7 @@ class Elevator {
         }
     }
 
-    updateCalls(calls, command) {
+    updateCalls(calls, command, update_passengers) {
         const command_type = command.command;
         const call_ids = command.call_ids;
         const n = call_ids.length;
@@ -131,38 +131,28 @@ class Elevator {
             for (let i = 0; i < n; i++) {
                 const id = call_ids[i];
                 const index = indexOfCallId(calls, id);
+                let call = calls[index];
                 calls.splice(index, 1);
-            }
-        }
-        else if (command_type == COMMAND_EXIT) {
-            for (let i = 0; i < n; i++) {
-                const id = call_ids[i];
-                let call = getCallById(this.passengers, id);
-                if (call.end != this.floor) {
-                    call = Objects.clone(call);
-                    call.start = this.floor;
-                    calls.push(call);
-                }
-            }
-        }
-    }
 
-    updatePassengers(calls, command) {
-        const command_type = command.command;
-        const call_ids = command.call_ids;
-        const n = call_ids.length;
-        if (command_type == COMMAND_ENTER) {
-            for (let i = 0; i < n; i++) {
-                const id = call_ids[i];
-                const call = getCallById(calls, id);
-                this.passengers.push(call);
+                if (update_passengers) {
+                    this.passengers.push(call);
+                }
             }
         }
         else if (command_type == COMMAND_EXIT) {
             for (let i = 0; i < n; i++) {
                 const id = call_ids[i];
                 const index = indexOfCallId(this.passengers, id);
-                this.passengers.splice(index, 1);
+                let call = this.passengers[index];
+                if (call.end != this.floor) {
+                    call = Objects.clone(call);
+                    call.start = this.floor;
+                    calls.push(call);
+                }
+
+                if (update_passengers) {
+                    this.passengers.splice(index, 1);
+                }
             }
         }
     }
@@ -185,8 +175,7 @@ class Elevator {
         }
 
         if ((command_type == COMMAND_ENTER) || (command_type == COMMAND_EXIT)) {
-            this.updateCalls(calls, command);
-            this.updatePassengers(calls, command);
+            this.updateCalls(calls, command, true);
         }
     }
 

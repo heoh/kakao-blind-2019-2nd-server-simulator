@@ -118,7 +118,7 @@ class State {
                 return false;
             }
             if ((command_type == "ENTER") || (command_type == "EXIT")) {
-                elevator.updateCalls(calls, command);
+                elevator.updateCalls(calls, command, false);
             }
         }
 
