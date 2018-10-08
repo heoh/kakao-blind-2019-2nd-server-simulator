@@ -26,7 +26,7 @@ class State {
     }
 
     update(action) {
-        return null;
+        return false;
     }
 
     _getProblem() {

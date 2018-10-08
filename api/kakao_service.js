@@ -84,14 +84,11 @@ class KakaoService {
             return response(403, null);
         }
 
-        const updated_state = state.update(action);
-        if (!updated_state) {
+        if (!state.update(action)) {
             return response(405, null);
         }
-        this._state_repository.remove(state);
-        this._state_repository.add(updated_state);
 
-        const body = this._trimState(updated_state);
+        const body = this._trimState(state);
         return response(200, body);
     }
     
