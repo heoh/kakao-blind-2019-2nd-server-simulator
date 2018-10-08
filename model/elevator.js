@@ -1,3 +1,5 @@
+const Objects = require(__dirname + '/../util/objects.js');
+
 const STATUS_STOPPED = "STOPPED";
 const STATUS_OPENED = "OPENED";
 const STATUS_UPWARD = "UPWARD";
@@ -29,13 +31,23 @@ STATUS_TABLE[STATUS_DOWNWARD] = {};
 STATUS_TABLE[STATUS_DOWNWARD][COMMAND_DOWN] = STATUS_DOWNWARD;
 STATUS_TABLE[STATUS_DOWNWARD][COMMAND_STOP] = STATUS_STOPPED;
 
-function getCallById(calls, id) {
+const MIN_FLOOR = 1;
+
+function indexOfCallId(calls, call_id) {
     const n = calls.length;
     for (let i = 0; i < n; i++) {
         const call = calls[i];
-        if (call.id == id) {
-            return call;
+        if (call.id == call_id) {
+            return i;
         }
+    }
+    return -1;
+}
+
+function getCallById(calls, call_id) {
+    const index = indexOfCallId(calls, call_id);
+    if (index >= 0) {
+        return calls[index];
     }
     return null;
 }
@@ -62,7 +74,7 @@ function isUnique(arr) {
 class Elevator {
     constructor(id, max_passengers, max_floor) {
         this.id = id;
-        this.floor = 1;
+        this.floor = MIN_FLOOR;
         this.passengers = [];
         this.status = STATUS_STOPPED;
         this.max_floor = max_floor;
@@ -112,11 +124,70 @@ class Elevator {
     }
 
     updateCalls(calls, command) {
+        const command_type = command.command;
+        const call_ids = command.call_ids;
+        const n = call_ids.length;
+        if (command_type == COMMAND_ENTER) {
+            for (let i = 0; i < n; i++) {
+                const id = call_ids[i];
+                const index = indexOfCallId(calls, id);
+                calls.splice(index, 1);
+            }
+        }
+        else if (command_type == COMMAND_EXIT) {
+            for (let i = 0; i < n; i++) {
+                const id = call_ids[i];
+                let call = getCallById(this.passengers, id);
+                if (call.end != this.floor) {
+                    call = Objects.clone(call);
+                    call.start = this.floor;
+                    calls.push(call);
+                }
+            }
+        }
+    }
 
+    updatePassengers(calls, command) {
+        const command_type = command.command;
+        const call_ids = command.call_ids;
+        const n = call_ids.length;
+        if (command_type == COMMAND_ENTER) {
+            for (let i = 0; i < n; i++) {
+                const id = call_ids[i];
+                const call = getCallById(calls, id);
+                this.passengers.push(call);
+            }
+        }
+        else if (command_type == COMMAND_EXIT) {
+            for (let i = 0; i < n; i++) {
+                const id = call_ids[i];
+                const index = indexOfCallId(this.passengers, id);
+                this.passengers.splice(index, 1);
+            }
+        }
     }
 
     execute(calls, command) {
-        
+        const command_type = command.command;
+        this.status = this._nextStatus(command_type);
+
+        if (this.status == STATUS_UPWARD) {
+            const next_floor = this.floor + 1;
+            if (next_floor <= this.max_floor) {
+                this.floor = next_floor;
+            }
+        }
+        else if (this.status == STATUS_DOWNWARD) {
+            const next_floor = this.floor - 1;
+            if (next_floor >= MIN_FLOOR) {
+                this.floor = next_floor;
+            }
+        }
+
+        if ((command_type == COMMAND_ENTER) || (command_type == COMMAND_EXIT)) {
+            this.updateCalls(calls, command);
+            this.updatePassengers(calls, command);
+        }
     }
 
     _nextStatus(command_type) {
