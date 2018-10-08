@@ -1,5 +1,7 @@
 const PROBLEM_PATHS = [
-    __dirname + '/../problems/problem_0.json'
+    __dirname + '/../problems/problem_0.json',
+    __dirname + '/../problems/problem_1.json',
+    __dirname + '/../problems/problem_2.json'
 ];
 
 class ProblemRepository {
