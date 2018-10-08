@@ -7,6 +7,18 @@ class Elevator {
         this.max_floor = max_floor;
         this.max_passengers = max_passengers;
     }
+
+    isExecutable(calls, command) {
+        return false;
+    }
+
+    updateCalls(calls, command) {
+
+    }
+
+    execute(calls, command) {
+        
+    }
 }
 
 module.exports = Elevator;

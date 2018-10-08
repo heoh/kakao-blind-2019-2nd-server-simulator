@@ -27,11 +27,24 @@ class State {
     }
 
     update(action) {
-        return false;
+        if (!this._isValidAction(action)) {
+            return false;
+        }
+
+        this._doAction(action);
+        this.timestamp += 1;
+        this._updateCalls();
+        return true;
     }
 
     clone() {
         return Objects.clone(this);
+    }
+
+    _setPropertiesAll(state) {
+        for (const key in state) {
+            this[key] = state[key];
+        }
     }
 
     _getProblem() {
@@ -46,6 +59,81 @@ class State {
             elevators.push(new Elevator(i, problem.max_passengers, problem.max_floor));
         }
         return elevators;
+    }
+
+    _isValidAction(action) {
+        try {
+            const commands = action.commands;
+            if (!this._isValidElevatorIds(commands)) {
+                return false;
+            }
+            if (!this._isValidCommands(commands)) {
+                return false;
+            }
+
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
+    _isValidElevatorIds(commands) {
+        try {
+            const num_of_elevators = this.elevators.length;
+            if (commands.length != num_of_elevators) {
+                return false;
+            }
+    
+            const exists = [];
+            for (let i = 0; i < commands.length; i++) {
+                const command = commands[i];
+                const id = command.elevator_id;
+    
+                if ((id < 0) || (id >= num_of_elevators)) {
+                    return false;
+                }
+                if (exists[id]) {
+                    return false;
+                }
+                exists[id] = true;
+            }
+
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
+    _isValidCommands(commands) {
+        const calls = Objects.clone(this.calls);
+
+        for (let i = 0; i < commands.length; i++) {
+            const command = commands[i];
+            const elevator = this.elevators[command.elevator_id];
+
+            if (!elevator.isExecutable(calls, command)) {
+                return false;
+            }
+            elevator.updateCalls(calls, command);
+        }
+
+        return true;
+    }
+
+    _doAction(action) {
+        const commands = action.commands;
+        for (let i = 0; i < commands.length; i++) {
+            const command = commands[i];
+            const elevator = this.elevators[command.elevator_id];
+
+            elevator.execute(this.calls, command);
+        }
+    }
+
+    _updateCalls() {
+        
     }
 }
 
