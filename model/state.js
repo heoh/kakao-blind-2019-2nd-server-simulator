@@ -1,4 +1,5 @@
 const Time = require(__dirname + '/../util/time.js');
+const Objects = require(__dirname + '/../util/objects.js');
 const Elevator = require(__dirname + '/elevator.js');
 const ProblemRepository = require(__dirname + '/../repository/problem_repository.js');
 
@@ -27,6 +28,10 @@ class State {
 
     update(action) {
         return false;
+    }
+
+    clone() {
+        return Objects.clone(this);
     }
 
     _getProblem() {
