@@ -53,12 +53,7 @@ class KakaoService {
         const state = new State(user_key, token, problem_id, num_of_elevators);
         this._state_repository.add(state);
     
-        const body = {
-            'token': state.token,
-            'timestamp': state.timestamp,
-            'elevators': state.elevators,
-            'is_end': state.isEnd()
-        };
+        const body = this._trimState(state);
         return response(200, body);
     }
 
@@ -73,13 +68,8 @@ class KakaoService {
             return response(403, null);
         }
 
-        const body = {
-            'token': state.token,
-            'timestamp': state.timestamp,
-            'elevators': state.elevators,
-            'calls': state.calls,
-            'is_end': state.isEnd()
-        };
+        const body = this._trimState(state);
+        body.calls = state.calls;
         return response(200, body);
     }
 
@@ -101,12 +91,7 @@ class KakaoService {
         this._state_repository.remove(state);
         this._state_repository.add(updated_state);
 
-        const body = {
-            'token': updated_state.token,
-            'timestamp': updated_state.timestamp,
-            'elevators': updated_state.elevators,
-            'is_end': updated_state.isEnd()
-        };
+        const body = this._trimState(updated_state);
         return response(200, body);
     }
     
@@ -121,6 +106,35 @@ class KakaoService {
 
     _isExpiredState(state) {
         return state.getElapsedTime() >= TOKEN_EXPIRATION_TIME;
+    }
+
+    _trimState(state) {
+        const trimedState = {
+            'token': state.token,
+            'timestamp': state.timestamp,
+            'elevators': this._trimElevators(state.elevators),
+            'is_end': state.isEnd()
+        };
+        return trimedState;
+    }
+
+    _trimElevators(elevators) {
+        const trimedElevators = [];
+        for (const i in elevators) {
+            const elevator = elevators[i];
+            trimedElevators.push(this._trimElevator(elevator));
+        }
+        return trimedElevators;
+    }
+
+    _trimElevator(elevator) {
+        const trimedElevator = {
+            'id': elevator.id,
+            'floor': elevator.floor,
+            'passengers': elevator.passengers,
+            'status': elevator.status
+        };
+        return trimedElevator;
     }
 }
 
