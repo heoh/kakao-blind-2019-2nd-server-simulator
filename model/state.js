@@ -152,7 +152,6 @@ class State {
     _updateCalls() {
         const problem = this._getProblem();
 
-        console.log(problem);
         const new_calls = problem.additional_calls[this.timestamp];
         if (new_calls) {
             for (const i in new_calls) {
