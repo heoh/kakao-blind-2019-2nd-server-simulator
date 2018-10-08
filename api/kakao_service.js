@@ -4,6 +4,7 @@ const UserRepository = require(__dirname + '/../repository/user_repository.js');
 const StateRepository = require(__dirname + '/../repository/state_repository.js');
 const ProblemRepository = require(__dirname + '/../repository/problem_repository.js');
 const State = require(__dirname + '/../model/state.js');
+const logger = require(__dirname + '/../util/logger.js');
 
 const MIN_TOKEN_GENERATION_INTERVAL = 10 * Time.SEC_TO_MILLISEC;
 const TOKEN_EXPIRATION_TIME = 10 * Time.MIN_TO_MILLISEC;
@@ -47,11 +48,15 @@ class KakaoService {
         if (this._state_repository.hasUserKey(user_key)) {
             const oldState = this._state_repository.getByUserKey(user_key);
             this._state_repository.remove(oldState);
+
+            logger.info('remove: ' + JSON.stringify(oldState));
         }
     
         const token = this._createUniqueToken();
         const state = new State(user_key, token, problem_id, num_of_elevators);
         this._state_repository.add(state);
+
+        logger.info('start: ' + JSON.stringify(state));
     
         const body = this._trimState(state);
         return response(200, body);
@@ -86,6 +91,10 @@ class KakaoService {
 
         if (!state.update(action)) {
             return response(405, null);
+        }
+
+        if (state.isEnd()) {
+            logger.info('end: ' + JSON.stringify(state));
         }
 
         const body = this._trimState(state);
