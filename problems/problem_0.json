@@ -1,4 +1,5 @@
 {
+    "id": 0,
     "max_passengers": 8,
     "max_floor": 5,
     "calls": [

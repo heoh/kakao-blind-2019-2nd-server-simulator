@@ -15,6 +15,8 @@ class State {
         this.elevators = this._createElevators(num_of_elevators);
         this.calls = [];
         this.ended_calls = 0;
+
+        this._updateCalls();
     }
 
     getElapsedTime() {
@@ -136,7 +138,16 @@ class State {
     }
 
     _updateCalls() {
+        const problem = this._getProblem();
 
+        console.log(problem);
+        const new_calls = problem.additional_calls[this.timestamp];
+        if (new_calls) {
+            for (const i in new_calls) {
+                const new_call = new_calls[i];
+                this.calls.push(new_call);
+            }
+        }
     }
 }
 
