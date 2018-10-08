@@ -95,7 +95,8 @@ class Elevator {
                     return false;
                 }
 
-                for (let i = 0; call_ids.length; i++) {
+                const n = call_ids.length;
+                for (let i = 0; i < n; i++) {
                     const id = call_ids[i];
                     const call = getCallById(calls, id);
                     if (call.start != this.floor) {
@@ -108,7 +109,8 @@ class Elevator {
                     return false;
                 }
 
-                for (let i = 0; call_ids.length; i++) {
+                const n = call_ids.length;
+                for (let i = 0; i < n; i++) {
                     const id = call_ids[i];
                     if (!getCallById(this.passengers, id)) {
                         return false;
@@ -126,8 +128,8 @@ class Elevator {
     updateCalls(calls, command, update_passengers) {
         const command_type = command.command;
         const call_ids = command.call_ids;
-        const n = call_ids.length;
         if (command_type == COMMAND_ENTER) {
+            const n = call_ids.length;
             for (let i = 0; i < n; i++) {
                 const id = call_ids[i];
                 const index = indexOfCallId(calls, id);
@@ -140,6 +142,7 @@ class Elevator {
             }
         }
         else if (command_type == COMMAND_EXIT) {
+            const n = call_ids.length;
             for (let i = 0; i < n; i++) {
                 const id = call_ids[i];
                 const index = indexOfCallId(this.passengers, id);
