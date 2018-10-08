@@ -63,7 +63,24 @@ class KakaoService {
     }
 
     onCalls(token) {
-        return response(200, null);
+        if (!this._state_repository.hasToken(token)) {
+            return response(403, null);
+        }
+
+        const state = this._state_repository.getByToken(token);
+        if (this._isExpiredState(state)) {
+            this._state_repository.remove(state);
+            return response(403, null);
+        }
+
+        const body = {
+            'token': state.token,
+            'timestamp': state.timestamp,
+            'elevators': state.elevators,
+            'calls': state.calls,
+            'is_end': state.isEnd()
+        };
+        return response(200, body);
     }
 
     action(token, action) {
@@ -77,6 +94,10 @@ class KakaoService {
             token = token_generator.generate();
         }
         return token;
+    }
+
+    _isExpiredState(state) {
+        return state.getElapsedTime() >= TOKEN_EXPIRATION_TIME;
     }
 }
 
