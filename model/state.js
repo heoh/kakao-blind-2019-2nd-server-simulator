@@ -41,6 +41,10 @@ class State {
     }
 
     update(action) {
+        if (this.isEnd()) {
+            return false;
+        }
+
         if (!this._isValidAction(action)) {
             return false;
         }
