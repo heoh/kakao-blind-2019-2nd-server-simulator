@@ -1,0 +1,43 @@
+{
+    "id": 0,
+    "max_passengers": 8,
+    "max_floor": 5,
+    "calls": [
+        {
+            "id": 0,
+            "timestamp": 0,
+            "start": 1,
+            "end": 2
+        },
+        {
+            "id": 1,
+            "timestamp": 1,
+            "start": 1,
+            "end": 3
+        },
+        {
+            "id": 2,
+            "timestamp": 2,
+            "start": 1,
+            "end": 4
+        },
+        {
+            "id": 3,
+            "timestamp": 3,
+            "start": 2,
+            "end": 5
+        },
+        {
+            "id": 4,
+            "timestamp": 4,
+            "start": 3,
+            "end": 1
+        },
+        {
+            "id": 5,
+            "timestamp": 5,
+            "start": 5,
+            "end": 1
+        }
+    ]
+}

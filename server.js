@@ -5,6 +5,8 @@ const SERVER_PORT = 8080;
 const express = require('express');
 const app = express();
 
+app.use('', require(__dirname + '/api/index.js'));
+
 app.listen(SERVER_PORT, function () {
     console.log(APP_NAME + " listening on port " + SERVER_PORT + ".");
 });
