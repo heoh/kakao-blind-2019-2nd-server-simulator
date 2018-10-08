@@ -25,6 +25,10 @@ class State {
         return (this.ended_calls == problem.calls.length);
     }
 
+    update(action) {
+        return null;
+    }
+
     _getProblem() {
         return problem_repository.get(this.problem_id);
     }

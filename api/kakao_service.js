@@ -84,7 +84,30 @@ class KakaoService {
     }
 
     action(token, action) {
-        return response(200, null);
+        if (!this._state_repository.hasToken(token)) {
+            return response(403, null);
+        }
+
+        const state = this._state_repository.getByToken(token);
+        if (this._isExpiredState(state)) {
+            this._state_repository.remove(state);
+            return response(403, null);
+        }
+
+        const updated_state = state.update(action);
+        if (!updated_state) {
+            return response(405, null);
+        }
+        this._state_repository.remove(state);
+        this._state_repository.add(updated_state);
+
+        const body = {
+            'token': updated_state.token,
+            'timestamp': updated_state.timestamp,
+            'elevators': updated_state.elevators,
+            'is_end': updated_state.isEnd()
+        };
+        return response(200, body);
     }
     
     _createUniqueToken() {
