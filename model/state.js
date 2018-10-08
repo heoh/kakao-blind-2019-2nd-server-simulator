@@ -14,7 +14,6 @@ class State {
         this.timestamp = 0;
         this.elevators = this._createElevators(num_of_elevators);
         this.calls = [];
-        this.ended_calls = 0;
 
         this._updateCalls();
     }
@@ -25,7 +24,20 @@ class State {
     
     isEnd() {
         const problem = this._getProblem();
-        return (this.ended_calls == problem.calls.length);
+        const minimum_end_timestamp = problem.additional_calls.length - 1;
+        if (this.timestamp < minimum_end_timestamp) {
+            return false;
+        }
+        if (this.calls.length > 0) {
+            return false;
+        }
+        for (const i in this.elevators) {
+            const elevator = this.elevators[i];
+            if (elevator.passengers.length > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     update(action) {
