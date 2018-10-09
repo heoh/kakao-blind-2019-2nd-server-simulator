@@ -36,12 +36,14 @@ function generateJayGBuilding() {
             21, 22, 23, 24 ,25 ];
     employee_traffic.setEnterance(1);
     employee_traffic.setFloors(employee_floors);
-    employee_traffic.setIncomingTraffic(0.5);
-    employee_traffic.setOutgoingTraffic(0.5);
+    employee_traffic.setIncomingTraffic(0.33);
+    employee_traffic.setOutgoingTraffic(0.33);
+    employee_traffic.setInterfloorTraffic(0.33);
 
     generator.addTrafficGenerator(employee_traffic, 1);
-    generator.setCallBatchSize({ min:1, max:10, mean:1.2, variance:8 });
-    generator.setCallBatchInterval({ min:1, max:20, mean:7, variance:10 });
+    // generator.setCallBatchSize({ min:1, max:10, mean:-2, variance:3 });
+    generator.setCallBatchSize({ min:1, max:1, mean:1, variance:0 });
+    generator.setCallBatchInterval({ min:0, max:8, mean:1.8, variance:2.5 });
 
     return generator.generate();
 }
@@ -68,15 +70,15 @@ function generateRyanTower() {
     const kakao_traffic = new TrafficGenerator();
     kakao_traffic.setEnterance(1);
     kakao_traffic.setFloors([ 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 ]);
-    kakao_traffic.setIncomingTraffic(0.4);
-    kakao_traffic.setOutgoingTraffic(0.4);
-    kakao_traffic.setInterfloorTraffic(0.2);
+    kakao_traffic.setIncomingTraffic(0.3);
+    kakao_traffic.setOutgoingTraffic(0.3);
+    kakao_traffic.setInterfloorTraffic(0.4);
 
     generator.addTrafficGenerator(customer_traffic, 0.4);
-    generator.addTrafficGenerator(employee_traffic, 0.3);
-    generator.addTrafficGenerator(kakao_traffic, 0.3);
-    generator.setCallBatchSize({ min:1, max:10, mean:1.2, variance:8 });
-    generator.setCallBatchInterval({ min:1, max:20, mean:7, variance:10 });
+    generator.addTrafficGenerator(employee_traffic, 0.2);
+    generator.addTrafficGenerator(kakao_traffic, 0.4);
+    generator.setCallBatchSize({ min:1, max:8, mean:2.4, variance:1 });
+    generator.setCallBatchInterval({ min:0, max:15, mean:4.7, variance:1.8 });
 
     return generator.generate();
 }
