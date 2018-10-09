@@ -8,11 +8,16 @@ if (!fs.existsSync(logDir)) {
 }
 
 const myFormat = printf(info => {
-    return `${info.timestamp} ${info.level}: ${info.message}`;
+    return `[${info.timestamp} - ${info.level}] ${info.message}`;
 });
+const myTimestamp = format((info) => {
+    info.timestamp = (new Date()).toLocaleString();
+    return info;
+  });
 const logger = createLogger({
     format: combine(
-        timestamp(),
+        // timestamp(),
+        myTimestamp(),
         myFormat
     ),
     level: 'info',
