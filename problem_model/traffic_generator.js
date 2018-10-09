@@ -25,6 +25,7 @@ class TrafficGenerator {
 
     setFloors(floors) {
         this._floors = floors;
+        this._updateFloorSelector();
     }
 
     setIncomingTraffic(weight) {
