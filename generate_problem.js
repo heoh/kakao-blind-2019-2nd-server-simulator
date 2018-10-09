@@ -41,7 +41,6 @@ function generateJayGBuilding() {
     employee_traffic.setInterfloorTraffic(0.33);
 
     generator.addTrafficGenerator(employee_traffic, 1);
-    // generator.setCallBatchSize({ min:1, max:10, mean:-2, variance:3 });
     generator.setCallBatchSize({ min:1, max:1, mean:1, variance:0 });
     generator.setCallBatchInterval({ min:0, max:8, mean:1.8, variance:2.5 });
 
