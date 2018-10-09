@@ -38,7 +38,18 @@ class ProblemGenerator {
     }
 
     generate() {
-        return null;
+        const problem = {
+            'id': this._problem_id,
+            'max_passengers': this._max_passengers,
+            'max_floor': this._max_floor,
+            'calls': this._generateCalls(this._total_calls)
+        };
+        return problem;
+    }
+
+    _generateCalls(n) {
+        const calls = [];
+        return calls;
     }
 }
 
