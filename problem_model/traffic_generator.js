@@ -18,6 +18,10 @@ class TrafficGenerator {
     setInterfloorTraffic(weight) {
 
     }
+
+    generate(id, timestamp) {
+        return null;
+    }
 }
 
 module.exports = TrafficGenerator;

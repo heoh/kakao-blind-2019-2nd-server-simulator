@@ -1,3 +1,6 @@
+const RandomSelector = require(__dirname + '/random_selector.js');
+const GaussianRandomInt = require(__dirname + '/gaussian_random_int.js');
+
 class ProblemGenerator {
     constructor() {
         this._problem_id = 0;
@@ -48,8 +51,41 @@ class ProblemGenerator {
     }
 
     _generateCalls(n) {
+        const traffic_gens = this._createTrafficGeneratorSelector();
+        const random_size = new GaussianRandomInt(this._call_batch_size);
+        const random_interval = new GaussianRandomInt(this._call_batch_interval);
+
         const calls = [];
+        let timestamp = 0;
+        while (calls.length < n) {
+            let batch_size = random_size.get();
+            if (calls.length + batch_size > n) {
+                batch_size = n - calls.length;
+            }
+
+            for (let i = 0; i < batch_size; i++) {
+                const generator = traffic_gens.get();
+                const id = calls.length;
+                const call = generator.generate(id, timestamp);
+
+                calls.push(call);
+            }
+
+            timestamp += random_interval.get();
+        }
+
         return calls;
+    }
+
+    _createTrafficGeneratorSelector() {
+        const selector = new RandomSelector();
+
+        for (const i in this._traffic_generators) {
+            const data = this._traffic_generators[i];
+            selector.add(data.traffic_gen, data.weight);
+        }
+
+        return selector;
     }
 }
 
