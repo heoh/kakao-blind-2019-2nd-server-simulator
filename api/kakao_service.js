@@ -94,7 +94,7 @@ class KakaoService {
         }
 
         if (state.isEnd()) {
-            this._state_repository.remove(state);
+            // this._state_repository.remove(state);
             logger.info('end: ' + JSON.stringify(state));
         }
 
